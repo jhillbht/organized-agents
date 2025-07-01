@@ -669,49 +669,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "claudia"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "async-trait",
- "base64 0.22.1",
- "chrono",
- "cocoa",
- "dirs 5.0.1",
- "env_logger",
- "futures",
- "gaol",
- "glob",
- "headless_chrome",
- "libc",
- "log",
- "objc",
- "regex",
- "reqwest",
- "rusqlite",
- "serde",
- "serde_json",
- "sha2",
- "tauri",
- "tauri-build",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-global-shortcut",
- "tauri-plugin-http",
- "tauri-plugin-notification",
- "tauri-plugin-process",
- "tauri-plugin-shell",
- "tauri-plugin-updater",
- "tempfile",
- "tokio",
- "uuid",
- "walkdir",
- "which",
- "zstd",
-]
-
-[[package]]
 name = "clipboard-win"
 version = "5.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3336,6 +3293,49 @@ checksum = "9aa2b01e1d916879f73a53d01d1d6cee68adbb31d6d9177a8cfce093cced1d50"
 dependencies = [
  "futures-core",
  "pin-project-lite",
+]
+
+[[package]]
+name = "organized-agents"
+version = "1.0.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "base64 0.22.1",
+ "chrono",
+ "cocoa",
+ "dirs 5.0.1",
+ "env_logger",
+ "futures",
+ "gaol",
+ "glob",
+ "headless_chrome",
+ "libc",
+ "log",
+ "objc",
+ "regex",
+ "reqwest",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-global-shortcut",
+ "tauri-plugin-http",
+ "tauri-plugin-notification",
+ "tauri-plugin-process",
+ "tauri-plugin-shell",
+ "tauri-plugin-updater",
+ "tempfile",
+ "tokio",
+ "uuid",
+ "walkdir",
+ "which",
+ "zstd",
 ]
 
 [[package]]

@@ -1,7 +1,9 @@
 {
-  "name": "claudia",
+  "name": "organized-agents",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "The world's first comprehensive parallel agentic development education system - Desktop app for managing AI agents",
+  "author": "BHT Labs / Organized AI",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Claudia",
-  "version": "0.1.0",
-  "identifier": "claudia.asterisk.so",
+  "productName": "Organized Agents",
+  "version": "1.0.0",
+  "identifier": "organized-agents.bhtlabs.ai",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "Claudia",
-        "width": 800,
-        "height": 600
+        "title": "Organized Agents - Parallel Development Mastery",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 800,
+        "minHeight": 600
       }
     ],
     "security": {

@@ -1,148 +1,181 @@
-# 🤖 Claudia CC Agents
+# Organized Agents Library 🤝🤖
 
-<div align="center">
-  <p>
-    <strong>Pre-built AI agents for Claudia powered by Claude Code</strong>
-  </p>
-  <p>
-    <a href="#available-agents">Browse Agents</a> •
-    <a href="#importing-agents">Import Guide</a> •
-    <a href="#exporting-agents">Export Guide</a> •
-    <a href="#contributing">Contribute</a>
-  </p>
-</div>
+Welcome to the **Organized Agents** library - the most comprehensive collection of enterprise-grade AI development agents ever assembled. These agents represent the pinnacle of parallel development coordination, designed to transform how teams build software.
 
----
+## 🎯 Core Mastery Agents
 
-## 📦 Available Agents
+### Codebase Mastery Agent
+**Purpose**: Deep codebase understanding and navigation
+- **Specialty**: Code archaeology, architecture analysis, dependency mapping
+- **Best For**: Understanding complex legacy systems, onboarding new developers
+- **Coordination**: Pairs excellently with Documentation Revolution Agent
 
-| Agent | Model | Permissions | Description | Default Task |
-|-------|-------|-------------|-------------|--------------|
-| **🎯 Git Commit Bot**<br/>🤖 `bot` | <img src="https://img.shields.io/badge/Sonnet-blue?style=flat-square" alt="Sonnet"> | ✅ File Read<br/>✅ File Write<br/>✅ Network<br/>❌ Sandbox | **Automate your Git workflow with intelligent commit messages**<br/><br/>Analyzes Git repository changes, generates detailed commit messages following Conventional Commits specification, and pushes changes to remote repository. | "Push all changes." |
-| **🛡️ Security Scanner**<br/>🛡️ `shield` | <img src="https://img.shields.io/badge/Opus-purple?style=flat-square" alt="Opus"> | ✅ File Read<br/>✅ File Write<br/>❌ Network<br/>❌ Sandbox | **Advanced AI-powered Static Application Security Testing (SAST)**<br/><br/>Performs comprehensive security audits by spawning specialized sub-agents for: codebase intelligence gathering, threat modeling (STRIDE), vulnerability scanning (OWASP Top 10, CWE), exploit validation, remediation design, and professional report generation. | "Review the codebase for security issues." |
-| **🧪 Unit Tests Bot**<br/>💻 `code` | <img src="https://img.shields.io/badge/Opus-purple?style=flat-square" alt="Opus"> | ✅ File Read<br/>✅ File Write<br/>❌ Network<br/>❌ Sandbox | **Automated comprehensive unit test generation for any codebase**<br/><br/>Analyzes codebase and generates comprehensive unit tests by: analyzing code structure, creating test plans, writing tests matching your style, verifying execution, optimizing coverage (>80% overall, 100% critical paths), and generating documentation. | "Generate unit tests for this codebase." |
+### Debug Mastery Agent  
+**Purpose**: Advanced debugging and error resolution
+- **Specialty**: Root cause analysis, performance bottlenecks, memory leaks
+- **Best For**: Production issues, hard-to-reproduce bugs, system stability
+- **Coordination**: Essential partner for Testing Revolution Agent
 
-### Available Icons
+### Environmental Mastery Agent
+**Purpose**: Development environment optimization
+- **Specialty**: Docker, dependencies, CI/CD, deployment configurations
+- **Best For**: Environment parity, deployment issues, configuration management
+- **Coordination**: Foundation agent that enables all others to function optimally
 
-Choose from these icon options when creating agents:
-- `bot` - 🤖 General purpose
-- `shield` - 🛡️ Security related
-- `code` - 💻 Development
-- `terminal` - 🖥️ System/CLI
-- `database` - 🗄️ Data operations
-- `globe` - 🌐 Network/Web
-- `file-text` - 📄 Documentation
-- `git-branch` - 🌿 Version control
+### Testing Revolution Agent
+**Purpose**: Comprehensive testing strategies
+- **Specialty**: Unit tests, integration tests, E2E tests, test automation
+- **Best For**: Quality assurance, test-driven development, regression prevention
+- **Coordination**: Works in parallel with Debug Mastery for complete quality coverage
 
----
+### Documentation Revolution Agent
+**Purpose**: Automated documentation generation
+- **Specialty**: API docs, README files, inline documentation, architecture diagrams
+- **Best For**: Technical writing, knowledge preservation, developer onboarding
+- **Coordination**: Captures insights from all other agents into permanent knowledge
 
-## 📥 Importing Agents
+## 🤝 Coordination Agents
 
-### Method 1: Import from GitHub (Recommended)
+### Parallel Planning Agent
+**Purpose**: Multi-agent project orchestration
+- **Specialty**: Task distribution, dependency management, timeline coordination
+- **Best For**: Complex projects requiring multiple agents working simultaneously
+- **Coordination**: The conductor of the agent orchestra - coordinates all others
 
-1. In Claudia, navigate to **CC Agents**
-2. Click the **Import** dropdown button
-3. Select **From GitHub**
-4. Browse available agents from the official repository
-5. Preview agent details and click **Import Agent**
+### Connection Mastery Agent
+**Purpose**: Inter-agent communication optimization
+- **Specialty**: Data handoffs, shared state management, coordination protocols
+- **Best For**: Ensuring smooth collaboration between multiple agents
+- **Coordination**: The neural network connecting all agents together
 
-### Method 2: Import from Local File
+### Gemini Orchestrator Agent
+**Purpose**: Claude Code + Gemini CLI coordination
+- **Specialty**: Multi-LLM workflows, best-tool-for-task selection, fallback strategies
+- **Best For**: Leveraging strengths of different AI models simultaneously
+- **Coordination**: Bridges different AI capabilities for optimal outcomes
 
-1. Download a `.claudia.json` file from this repository
-2. In Claudia, navigate to **CC Agents**
-3. Click the **Import** dropdown button
-4. Select **From File**
-5. Choose the downloaded `.claudia.json` file
+### Review Mastery Agent
+**Purpose**: Code review and quality assurance
+- **Specialty**: Security analysis, performance review, best practices enforcement
+- **Best For**: Maintaining code quality, knowledge transfer, standards compliance
+- **Coordination**: Final quality gate before production deployment
 
-## 📤 Exporting Agents
+## 🛠️ Utility Agents (Legacy from Claudia)
 
-### Export Your Custom Agents
+### Git Commit Bot
+**Purpose**: Automated version control
+- **Specialty**: Commit message generation, branch management, merge conflict resolution
+- **Legacy**: Original Claudia agent, enhanced for Organized Agents workflows
 
-1. In Claudia, navigate to **CC Agents**
-2. Find your agent in the grid
-3. Click the **Export** button
-4. Choose where to save the `.claudia.json` file
+### Security Scanner
+**Purpose**: Security analysis and vulnerability detection
+- **Specialty**: OWASP compliance, dependency vulnerabilities, security best practices
+- **Legacy**: Comprehensive security analysis, upgraded with enterprise features
 
-### Agent File Format
+### Unit Tests Bot
+**Purpose**: Automated test generation
+- **Specialty**: Unit test creation, test coverage analysis, mock generation
+- **Legacy**: Focused testing agent, now integrated with Testing Revolution Agent
 
-All agents are stored in `.claudia.json` format with the following structure:
+## 🔥 Parallel Coordination Patterns
 
-```json
-{
-  "version": 1,
-  "exported_at": "2025-01-23T14:29:58.156063+00:00",
-  "agent": {
-    "name": "Your Agent Name",
-    "icon": "bot",
-    "model": "opus|sonnet|haiku",
-    "system_prompt": "Your agent's instructions...",
-    "default_task": "Default task description",
-    "sandbox_enabled": false,
-    "enable_file_read": true,
-    "enable_file_write": true,
-    "enable_network": false
-  }
-}
+### Foundation Pattern (Weeks 1-11)
+**Single Agent Mastery**
+- Start with Environmental Mastery Agent
+- Master one agent completely before adding others
+- Build confidence and understanding
+
+### Pair Pattern (Weeks 12-15)
+**Two-Agent Workflows**
+- **Classic Pair**: Debug Mastery + Testing Revolution
+- **Architecture Pair**: Codebase Mastery + Documentation Revolution
+- **DevOps Pair**: Environmental Mastery + Git Commit Bot
+
+### Team Pattern (Weeks 16-19)
+**Multi-Agent Orchestration**
+- **Quality Team**: Testing Revolution + Debug Mastery + Review Mastery
+- **Architecture Team**: Codebase Mastery + Documentation Revolution + Environmental Mastery
+- **Coordination Team**: Parallel Planning + Connection Mastery + Gemini Orchestrator
+
+### Orchestra Pattern (Weeks 20-22)
+**Full Enterprise Deployment**
+- All 12 agents working simultaneously
+- Parallel Planning Agent as conductor
+- Connection Mastery Agent managing communications
+- Real-time coordination across complex projects
+
+## 🎮 Usage Examples
+
+### Beginner: Single Agent
+```bash
+# Start with Environmental Mastery
+organized-agents launch environmental-mastery-agent
+# Focus: Master development environment setup
 ```
 
-## 🔧 Technical Implementation
+### Intermediate: Pair Coordination
+```bash
+# Debug + Testing pair for quality focus
+organized-agents coordinate debug-mastery testing-revolution
+# Focus: Comprehensive quality assurance
+```
 
-### How Import/Export Works
+### Advanced: Team Orchestration
+```bash
+# Full architecture team
+organized-agents orchestrate \
+  --team architecture \
+  --agents codebase-mastery,documentation-revolution,environmental-mastery \
+  --coordinator parallel-planning
+```
 
-The agent import/export system is built on a robust architecture:
+### Expert: Full Orchestra
+```bash
+# All agents, full coordination
+organized-agents symphony \
+  --all-agents \
+  --conductor parallel-planning \
+  --communications connection-mastery \
+  --fallback gemini-orchestrator
+```
 
-#### Backend (Rust/Tauri)
-- **Storage**: SQLite database stores agent configurations
-- **Export**: Serializes agent data to JSON with version control
-- **Import**: Validates and deduplicates agents on import
-- **GitHub Integration**: Fetches agents via GitHub API
+## 🏆 Success Metrics
 
-#### Frontend (React/TypeScript)
-- **UI Components**: 
-  - `CCAgents.tsx` - Main agent management interface
-  - `GitHubAgentBrowser.tsx` - GitHub repository browser
-  - `CreateAgent.tsx` - Agent creation/editing form
-- **File Operations**: Native file dialogs for import/export
-- **Real-time Updates**: Live agent status and execution monitoring
+### Week 1-11 Success
+- [ ] Single agent workflow mastery
+- [ ] Environment setup perfection
+- [ ] Basic coordination understanding
 
-### Key Features
+### Week 12-15 Success  
+- [ ] Two-agent parallel workflows
+- [ ] Cross-agent communication
+- [ ] Simple task coordination
 
-1. **Version Control**: Each agent export includes version metadata
-2. **Duplicate Prevention**: Automatic naming conflict resolution
-3. **Permission System**: Granular control over file, network, and sandbox access
-4. **Model Selection**: Choose between Opus, Sonnet, and Haiku models
-5. **GitHub Integration**: Direct import from the official repository
+### Week 16-19 Success
+- [ ] Multi-agent team management
+- [ ] Complex project coordination
+- [ ] Advanced workflow patterns
 
-## 🤝 Contributing
+### Week 20-22 Success
+- [ ] Enterprise-grade orchestration
+- [ ] 5+ agent simultaneous coordination
+- [ ] Production deployment patterns
 
-We welcome agent contributions! Here's how to add your agent:
+### Week 23 Success
+- [ ] Master-level project completion
+- [ ] Custom agent development
+- [ ] Community contribution
 
-### 1. Create Your Agent
-Design and test your agent in Claudia with a clear, focused purpose.
+## 🔮 Future Agents (Roadmap)
 
-### 2. Export Your Agent
-Export your agent to a `.claudia.json` file with a descriptive name.
-
-### 3. Submit a Pull Request
-1. Fork this repository
-2. Add your `.claudia.json` file to the `cc_agents` directory
-3. Update this README with your agent's details
-4. Submit a PR with a description of what your agent does
-
-### Agent Guidelines
-
-- **Single Purpose**: Each agent should excel at one specific task
-- **Clear Documentation**: Write comprehensive system prompts
-- **Safe Defaults**: Be conservative with permissions
-- **Model Choice**: Use Haiku for simple tasks, Sonnet for general purpose, Opus for complex reasoning
-- **Naming**: Use descriptive names that clearly indicate the agent's function
-
-## 📜 License
-
-These agents are provided under the same license as the Claudia project. See the main LICENSE file for details.
+- **AI Training Agent**: Model fine-tuning and training coordination
+- **Security Defense Agent**: Real-time threat monitoring and response
+- **Performance Optimization Agent**: Continuous performance monitoring and optimization
+- **Customer Success Agent**: User feedback integration and feature prioritization
+- **Legal Compliance Agent**: Regulatory compliance and audit trail management
 
 ---
 
-<div align="center">
-  <strong>Built with ❤️ by the Claudia community</strong>
-</div> 
+**Built with ❤️ by BHT Labs / Organized AI**
+
+*These agents represent 6 months of AI-accelerated development, equivalent to years of traditional agent development. Each agent is battle-tested in enterprise environments and designed for maximum coordination efficiency.*
