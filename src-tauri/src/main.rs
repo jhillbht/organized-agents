@@ -13,7 +13,8 @@ use commands::agents::{
     export_agent_to_file, fetch_github_agent_content, fetch_github_agents, get_agent,
     get_agent_run, get_agent_run_with_real_time_metrics, get_claude_binary_path,
     get_live_session_output, get_session_output, get_session_status, import_agent,
-    import_agent_from_file, import_agent_from_github, init_database, kill_agent_session,
+    import_agent_from_file, import_agent_from_github,
+            import_preinstalled_agents, init_database, kill_agent_session,
     list_agent_runs, list_agent_runs_with_metrics, list_agents, list_claude_installations,
     list_running_sessions, set_claude_binary_path, stream_session_output, update_agent, AgentDb,
 };
@@ -158,6 +159,7 @@ fn main() {
             fetch_github_agents,
             fetch_github_agent_content,
             import_agent_from_github,
+            import_preinstalled_agents,
             list_sandbox_profiles,
             get_sandbox_profile,
             create_sandbox_profile,

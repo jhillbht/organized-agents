@@ -1,14 +1,14 @@
-# Organized Agents 🤝🤖
+# Organized AI 🤝🤖
 
 **The world's first comprehensive parallel agentic development education system**
 
-Organized Agents is a powerful desktop application that transforms how you coordinate AI agents for accelerated development. Built with Tauri 2 and featuring a beautiful React frontend, it provides your command center for managing multiple AI agents, creating sophisticated workflows, and mastering parallel development coordination.
+Organized AI is a powerful desktop application that transforms how you coordinate AI agents for accelerated development. Built with Tauri 2 and featuring a beautiful React frontend, it provides your command center for managing multiple AI agents, creating sophisticated workflows, and mastering parallel development coordination.
 
-![Organized Agents Logo](src-tauri/icons/icon.png)
+![Organized AI Logo](src-tauri/icons/icon.png)
 
-## 🌟 What Makes Organized Agents Special
+## 🌟 What Makes Organized AI Special
 
-Organized Agents comes pre-loaded with **12 sophisticated development agents** designed for enterprise-grade parallel coordination:
+Organized AI comes pre-loaded with **12 sophisticated development agents** designed for enterprise-grade parallel coordination:
 
 ### 🎯 Core Mastery Agents
 - **Codebase Mastery Agent** - Deep codebase understanding and navigation
@@ -69,7 +69,7 @@ bun run tauri build
 
 *The full 23-week curriculum, exercises, and training materials are available in our dedicated course repository.*
 
-Organized Agents is designed for the **23-week progression from beginner to parallel agent master**:
+Organized AI is designed for the **23-week progression from beginner to parallel agent master**:
 
 ### Foundation (Weeks 1-11)
 - Single agent mastery
@@ -112,7 +112,7 @@ Create custom agents by adding `.claudia.json` files to the `cc_agents/` directo
 
 ## 🔧 Configuration
 
-Organized Agents automatically detects your development environment and configures agents accordingly. Key features:
+Organized AI automatically detects your development environment and configures agents accordingly. Key features:
 
 - **Auto-detection** of Claude Code, Gemini CLI, and other tools
 - **Environment variable** management for API keys

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🤝🤖 Setting up Organized Agents..."
+echo "🤝🤖 Setting up Organized AI..."
 echo "The world's first comprehensive parallel agentic development education system"
 echo
 

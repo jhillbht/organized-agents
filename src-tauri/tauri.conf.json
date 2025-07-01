@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Organized Agents",
+  "productName": "Organized AI",
   "version": "1.0.0",
   "identifier": "organized-agents.bhtlabs.ai",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Organized Agents - Parallel Development Mastery",
+        "title": "Organized AI - Parallel Development Mastery",
         "width": 1200,
         "height": 800,
         "minWidth": 800,

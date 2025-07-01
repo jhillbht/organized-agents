@@ -246,6 +246,37 @@ export const CCAgents: React.FC<CCAgentsProps> = ({ onBack, className }) => {
     }
   };
 
+  // Import all pre-installed agents
+  const handleImportPreinstalled = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const importedAgents = await invoke<string[]>("import_preinstalled_agents");
+      
+      if (importedAgents.length > 0) {
+        setToast({
+          type: "success",
+          message: `Successfully imported ${importedAgents.length} pre-installed agents: ${importedAgents.join(", ")}`
+        });
+        await loadAgents(); // Reload the agents list
+      } else {
+        setToast({
+          type: "info", 
+          message: "No new agents to import (agents may already exist)"
+        });
+      }
+    } catch (err) {
+      setError(err as string);
+      setToast({
+        type: "error",
+        message: `Failed to import pre-installed agents: ${err}`
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Pagination calculations
   const totalPages = Math.ceil(agents.length / AGENTS_PER_PAGE);
   const startIndex = (currentPage - 1) * AGENTS_PER_PAGE;
@@ -421,6 +452,12 @@ export const CCAgents: React.FC<CCAgentsProps> = ({ onBack, className }) => {
                       <h3 className="text-lg font-medium mb-2">No agents yet</h3>
                       <p className="text-sm text-muted-foreground mb-4">
                         Create your first CC Agent to get started
+                      </p>
+                      <div className="flex gap-2">
+                        <Button onClick={handleImportPreinstalled} variant="outline" size="default">
+                          <Bot className="h-4 w-4 mr-2" />
+                          Import Pre-installed Agents
+                        </Button>
                       </p>
                       <Button onClick={() => setView("create")} size="default">
                         <Plus className="h-4 w-4 mr-2" />

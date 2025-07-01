@@ -2172,3 +2172,57 @@ pub async fn import_agent_from_github(
     // Import using existing function
     import_agent(db, json_data).await
 }
+
+/// Import all agents from the cc_agents directory
+#[tauri::command]
+pub async fn import_preinstalled_agents(db: State<'_, AgentDb>) -> Result<Vec<String>, String> {
+    info!("Importing all pre-installed agents from cc_agents directory...");
+    
+    let mut imported_agents = Vec::new();
+    
+    // Get the current directory (should be the app directory)
+    let current_dir = std::env::current_dir().map_err(|e| e.to_string())?;
+    let cc_agents_dir = current_dir.join("cc_agents");
+    
+    if !cc_agents_dir.exists() {
+        return Err("cc_agents directory not found".to_string());
+    }
+    
+    // Read all .claudia.json files
+    let entries = std::fs::read_dir(&cc_agents_dir)
+        .map_err(|e| format!("Failed to read cc_agents directory: {}", e))?;
+    
+    for entry in entries {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let path = entry.path();
+        
+        if path.extension().and_then(|s| s.to_str()) == Some("json") 
+            && path.file_name().and_then(|s| s.to_str()).map_or(false, |s| s.contains("claudia")) {
+            
+            info!("Importing agent from: {:?}", path);
+            
+            // Read the file
+            match std::fs::read_to_string(&path) {
+                Ok(json_data) => {
+                    // Try to import the agent
+                    match import_agent(db.clone(), json_data).await {
+                        Ok(agent) => {
+                            imported_agents.push(agent.name.clone());
+                            info!("Successfully imported agent: {}", agent.name);
+                        },
+                        Err(e) => {
+                            warn!("Failed to import agent from {:?}: {}", path, e);
+                            // Continue with other agents instead of failing completely
+                        }
+                    }
+                },
+                Err(e) => {
+                    warn!("Failed to read file {:?}: {}", path, e);
+                }
+            }
+        }
+    }
+    
+    info!("Import complete. Imported {} agents: {:?}", imported_agents.len(), imported_agents);
+    Ok(imported_agents)
+}

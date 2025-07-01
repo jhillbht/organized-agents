@@ -149,7 +149,7 @@ function App() {
               >
                 <h1 className="text-4xl font-bold tracking-tight">
                   <span className="rotating-symbol"></span>
-                  Welcome to Organized Agents
+                  Welcome to Organized AI
                 </h1>
               </motion.div>
 
