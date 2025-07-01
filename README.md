@@ -65,6 +65,10 @@ bun run tauri build
 
 ## 🎓 Learning Path
 
+**📚 Complete Course Materials**: [https://github.com/Organized-AI/organized-agents](https://github.com/Organized-AI/organized-agents)
+
+*The full 23-week curriculum, exercises, and training materials are available in our dedicated course repository.*
+
 Organized Agents is designed for the **23-week progression from beginner to parallel agent master**:
 
 ### Foundation (Weeks 1-11)
