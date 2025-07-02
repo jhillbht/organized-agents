@@ -344,7 +344,7 @@ export const CCAgents: React.FC<CCAgentsProps> = ({ onBack, className }) => {
                 <h1 className="text-2xl font-bold">CC Agents</h1>
                 <p className="text-sm text-muted-foreground">
                   Manage your Claude Code agents
-                </div>
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
