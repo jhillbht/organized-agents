@@ -344,7 +344,7 @@ export const CCAgents: React.FC<CCAgentsProps> = ({ onBack, className }) => {
                 <h1 className="text-2xl font-bold">CC Agents</h1>
                 <p className="text-sm text-muted-foreground">
                   Manage your Claude Code agents
-                </p>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -452,13 +452,13 @@ export const CCAgents: React.FC<CCAgentsProps> = ({ onBack, className }) => {
                       <h3 className="text-lg font-medium mb-2">No agents yet</h3>
                       <p className="text-sm text-muted-foreground mb-4">
                         Create your first CC Agent to get started
-                      </p>
+                      </div>
                       <div className="flex gap-2">
                         <Button onClick={handleImportPreinstalled} variant="outline" size="default">
                           <Bot className="h-4 w-4 mr-2" />
                           Import Pre-installed Agents
                         </Button>
-                      </p>
+                      </div>
                       <Button onClick={() => setView("create")} size="default">
                         <Plus className="h-4 w-4 mr-2" />
                         Create CC Agent
@@ -486,7 +486,7 @@ export const CCAgents: React.FC<CCAgentsProps> = ({ onBack, className }) => {
                                   </h3>
                                   <p className="text-xs text-muted-foreground">
                                     Created: {new Date(agent.created_at).toLocaleDateString()}
-                                  </p>
+                                  </div>
                                 </CardContent>
                                 <CardFooter className="p-4 pt-0 flex justify-center gap-1 flex-wrap">
                                   <Button
