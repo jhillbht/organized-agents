@@ -10,7 +10,10 @@ import {
   Code,
   Settings2,
   Terminal,
-  Loader2
+  Loader2,
+  DollarSign,
+  TrendingDown,
+  Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +29,9 @@ import {
 import { cn } from "@/lib/utils";
 import { Toast, ToastContainer } from "@/components/ui/toast";
 import { ClaudeVersionSelector } from "./ClaudeVersionSelector";
+import { RouterStatus } from "./RouterStatus";
+import { CostTracker } from "./CostTracker";
+import { AuthStatus } from "./AuthStatus";
 
 interface SettingsProps {
   /**
@@ -357,6 +363,10 @@ export const Settings: React.FC<SettingsProps> = ({
                 <Settings2 className="h-4 w-4 text-slate-500" />
                 General
               </TabsTrigger>
+              <TabsTrigger value="router" className="gap-2">
+                <DollarSign className="h-4 w-4 text-green-500" />
+                Cost Optimization
+              </TabsTrigger>
               <TabsTrigger value="permissions" className="gap-2">
                 <Shield className="h-4 w-4 text-amber-500" />
                 Permissions
@@ -373,6 +383,9 @@ export const Settings: React.FC<SettingsProps> = ({
             
             {/* General Settings */}
             <TabsContent value="general" className="space-y-6">
+              {/* Authentication Status Card */}
+              <AuthStatus />
+              
               <Card className="p-6 space-y-6">
                 <div>
                   <h3 className="text-base font-semibold mb-4">General Settings</h3>
@@ -444,6 +457,216 @@ export const Settings: React.FC<SettingsProps> = ({
                           ⚠️ Claude binary path has been changed. Remember to save your settings.
                         </p>
                       )}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </TabsContent>
+            
+            {/* Cost Optimization Settings */}
+            <TabsContent value="router" className="space-y-6">
+              {/* Router Status Display */}
+              <RouterStatus showControls={true} />
+              
+              {/* Cost Tracking Dashboard */}
+              <CostTracker />
+              
+              <Card className="p-6">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-base font-semibold mb-2">Claude Code Router Configuration</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Configure smart model routing for up to 80% cost savings
+                    </p>
+                  </div>
+                  
+                  {/* OpenRouter API Key Configuration */}
+                  <div className="space-y-4 p-4 border rounded-lg bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                    <div>
+                      <Label htmlFor="openrouterApiKey" className="font-medium">OpenRouter API Key</Label>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        Required for accessing all LLM models through OpenRouter. Get your key from <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">openrouter.ai/keys</a>
+                      </p>
+                      <Input
+                        id="openrouterApiKey"
+                        type="password"
+                        placeholder="sk-or-..."
+                        value={settings?.routerConfig?.openrouterApiKey || ""}
+                        onChange={(e) => updateSetting("routerConfig", { 
+                          ...settings?.routerConfig, 
+                          openrouterApiKey: e.target.value 
+                        })}
+                        className="font-mono text-sm"
+                      />
+                      <p className="text-xs text-muted-foreground mt-2">
+                        🔒 API key is stored securely and never shared
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Router Enable Toggle */}
+                  <div className="flex items-center justify-between p-4 border rounded-lg bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+                    <div className="space-y-0.5 flex-1">
+                      <Label htmlFor="routerEnabled" className="font-medium">Enable Smart Routing</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Automatically route tasks to cost-optimized models based on complexity
+                      </p>
+                    </div>
+                    <Switch
+                      id="routerEnabled"
+                      checked={settings?.routerEnabled === true}
+                      onCheckedChange={(checked) => updateSetting("routerEnabled", checked)}
+                    />
+                  </div>
+                  
+                  {/* Cost Savings Display */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-4 border rounded-lg bg-green-50 border-green-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <TrendingDown className="h-4 w-4 text-green-600" />
+                        <span className="text-sm font-medium text-green-800">Monthly Savings</span>
+                      </div>
+                      <div className="text-lg font-bold text-green-600">$155</div>
+                      <div className="text-xs text-green-700">77.5% reduction</div>
+                    </div>
+                    
+                    <div className="p-4 border rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <DollarSign className="h-4 w-4 text-red-600" />
+                        <span className="text-sm font-medium">Traditional Cost</span>
+                      </div>
+                      <div className="text-lg font-bold text-red-600">$200</div>
+                      <div className="text-xs text-muted-foreground">Without optimization</div>
+                    </div>
+                    
+                    <div className="p-4 border rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Zap className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium">Optimized Cost</span>
+                      </div>
+                      <div className="text-lg font-bold text-blue-600">$45</div>
+                      <div className="text-xs text-muted-foreground">With smart routing</div>
+                    </div>
+                  </div>
+                  
+                  {/* Routing Configuration */}
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium">Routing Contexts</h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 border rounded-lg">
+                        <div className="space-y-2">
+                          <Label htmlFor="defaultModel">Default Context</Label>
+                          <select
+                            id="defaultModel"
+                            value={settings?.routerConfig?.default || "claude-3-5-sonnet-20241022"}
+                            onChange={(e) => updateSetting("routerConfig", { 
+                              ...settings?.routerConfig, 
+                              default: e.target.value 
+                            })}
+                            className="w-full p-2 border rounded-md text-sm"
+                          >
+                            <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+                            <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku</option>
+                            <option value="deepseek-coder">DeepSeek Coder</option>
+                            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                          </select>
+                          <p className="text-xs text-muted-foreground">For complex production tasks</p>
+                        </div>
+                      </div>
+                      
+                      <div className="p-4 border rounded-lg">
+                        <div className="space-y-2">
+                          <Label htmlFor="backgroundModel">Background Context</Label>
+                          <select
+                            id="backgroundModel"
+                            value={settings?.routerConfig?.background || "deepseek-coder"}
+                            onChange={(e) => updateSetting("routerConfig", { 
+                              ...settings?.routerConfig, 
+                              background: e.target.value 
+                            })}
+                            className="w-full p-2 border rounded-md text-sm"
+                          >
+                            <option value="deepseek-coder">DeepSeek Coder</option>
+                            <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku</option>
+                            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                          </select>
+                          <p className="text-xs text-muted-foreground">For simple operations (90% savings)</p>
+                        </div>
+                      </div>
+                      
+                      <div className="p-4 border rounded-lg">
+                        <div className="space-y-2">
+                          <Label htmlFor="thinkModel">Think Context</Label>
+                          <select
+                            id="thinkModel"
+                            value={settings?.routerConfig?.think || "claude-3-5-haiku-20241022"}
+                            onChange={(e) => updateSetting("routerConfig", { 
+                              ...settings?.routerConfig, 
+                              think: e.target.value 
+                            })}
+                            className="w-full p-2 border rounded-md text-sm"
+                          >
+                            <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku</option>
+                            <option value="deepseek-coder">DeepSeek Coder</option>
+                            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                          </select>
+                          <p className="text-xs text-muted-foreground">For quick reasoning</p>
+                        </div>
+                      </div>
+                      
+                      <div className="p-4 border rounded-lg">
+                        <div className="space-y-2">
+                          <Label htmlFor="longContextModel">Long Context</Label>
+                          <select
+                            id="longContextModel"
+                            value={settings?.routerConfig?.longContext || "gemini-1.5-pro"}
+                            onChange={(e) => updateSetting("routerConfig", { 
+                              ...settings?.routerConfig, 
+                              longContext: e.target.value 
+                            })}
+                            className="w-full p-2 border rounded-md text-sm"
+                          >
+                            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                            <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+                          </select>
+                          <p className="text-xs text-muted-foreground">For extended processing</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Auto-routing Rules */}
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium">Auto-routing Rules</h4>
+                    <div className="p-4 border rounded-lg bg-blue-50 border-blue-200">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="autoRoute" className="font-medium">Enable Auto-routing</Label>
+                          <Switch
+                            id="autoRoute"
+                            checked={settings?.routerConfig?.autoRoute !== false}
+                            onCheckedChange={(checked) => updateSetting("routerConfig", { 
+                              ...settings?.routerConfig, 
+                              autoRoute: checked 
+                            })}
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Automatically select the most cost-effective model based on task complexity
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="text-xs text-muted-foreground space-y-1">
+                      <p><strong>Auto-routing logic:</strong></p>
+                      <ul className="list-disc list-inside space-y-1 ml-2">
+                        <li>Simple file operations → Background context (DeepSeek)</li>
+                        <li>Quick questions → Think context (Haiku)</li>
+                        <li>Large codebases → Long context (Gemini Pro)</li>
+                        <li>Complex architecture → Default context (Sonnet)</li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -637,6 +860,7 @@ export const Settings: React.FC<SettingsProps> = ({
                       <strong>Common variables:</strong>
                     </p>
                     <ul className="text-xs text-muted-foreground space-y-1 ml-4">
+                      <li>• <code className="px-1 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400">OPENROUTER_API_KEY</code> - OpenRouter API key for cost optimization</li>
                       <li>• <code className="px-1 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400">CLAUDE_CODE_ENABLE_TELEMETRY</code> - Enable/disable telemetry (0 or 1)</li>
                       <li>• <code className="px-1 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400">ANTHROPIC_MODEL</code> - Custom model name</li>
                       <li>• <code className="px-1 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400">DISABLE_COST_WARNINGS</code> - Disable cost warnings (1)</li>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Loader2, Bot, FolderCode } from "lucide-react";
+import { Plus, Loader2, Bot, FolderCode, GraduationCap } from "lucide-react";
 import { api, type Project, type Session, type ClaudeMdFile } from "@/lib/api";
 import { OutputCacheProvider } from "@/lib/outputCache";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,11 @@ import { MCPManager } from "@/components/MCPManager";
 import { NFOCredits } from "@/components/NFOCredits";
 import { ClaudeBinaryDialog } from "@/components/ClaudeBinaryDialog";
 import { Toast, ToastContainer } from "@/components/ui/toast";
+import { AgentRouterCoordination } from "@/components/AgentRouterCoordination";
+import { EducationDashboard } from "@/components/EducationDashboard";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
-type View = "welcome" | "projects" | "agents" | "editor" | "settings" | "claude-file-editor" | "claude-code-session" | "usage-dashboard" | "mcp";
+type View = "welcome" | "projects" | "agents" | "editor" | "settings" | "claude-file-editor" | "claude-code-session" | "usage-dashboard" | "mcp" | "education";
 
 /**
  * Main App component - Manages the Claude directory browser UI
@@ -36,6 +39,7 @@ function App() {
   const [showNFO, setShowNFO] = useState(false);
   const [showClaudeBinaryDialog, setShowClaudeBinaryDialog] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
+  const [showCoordinationDialog, setShowCoordinationDialog] = useState(false);
 
   // Load projects on mount when in projects view
   useEffect(() => {
@@ -154,7 +158,7 @@ function App() {
               </motion.div>
 
               {/* Navigation Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 {/* CC Agents Card */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -185,6 +189,24 @@ function App() {
                     <div className="h-full flex flex-col items-center justify-center p-8">
                       <FolderCode className="h-16 w-16 mb-4 text-primary" />
                       <h2 className="text-xl font-semibold">CC Projects</h2>
+                    </div>
+                  </Card>
+                </motion.div>
+
+                {/* Agent Journey Academy Card */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <Card 
+                    className="h-64 cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg border border-border/50 shimmer-hover bg-gradient-to-br from-primary/5 to-primary/10"
+                    onClick={() => setView("education")}
+                  >
+                    <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+                      <GraduationCap className="h-16 w-16 mb-4 text-primary" />
+                      <h2 className="text-xl font-semibold mb-2">Agent Journey Academy</h2>
+                      <p className="text-sm text-muted-foreground">Master AI agent coordination through progressive learning</p>
                     </div>
                   </Card>
                 </motion.div>
@@ -353,6 +375,15 @@ function App() {
           <MCPManager onBack={() => setView("welcome")} />
         );
       
+      case "education":
+        return (
+          <div className="flex-1 overflow-hidden">
+            <div className="h-full p-6">
+              <EducationDashboard />
+            </div>
+          </div>
+        );
+      
       default:
         return null;
     }
@@ -368,6 +399,8 @@ function App() {
           onUsageClick={() => setView("usage-dashboard")}
           onMCPClick={() => setView("mcp")}
           onInfoClick={() => setShowNFO(true)}
+          onCoordinationClick={() => setShowCoordinationDialog(true)}
+          onEducationClick={() => setView("education")}
         />
         
         {/* Main Content */}
@@ -389,6 +422,19 @@ function App() {
           }}
           onError={(message) => setToast({ message, type: "error" })}
         />
+        
+        {/* Global Coordination Dialog */}
+        <Dialog open={showCoordinationDialog} onOpenChange={setShowCoordinationDialog}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Coordinate Agents</DialogTitle>
+              <DialogDescription>
+                Execute coordinated tasks across multiple agents from anywhere in the application.
+              </DialogDescription>
+            </DialogHeader>
+            <AgentRouterCoordination onClose={() => setShowCoordinationDialog(false)} />
+          </DialogContent>
+        </Dialog>
         
         {/* Toast Container */}
         <ToastContainer>

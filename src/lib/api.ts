@@ -39,6 +39,17 @@ export interface Session {
  */
 export interface ClaudeSettings {
   [key: string]: any;
+  // Router-specific settings
+  routerEnabled?: boolean;
+  routerConfig?: {
+    default?: string;
+    background?: string;
+    think?: string;
+    longContext?: string;
+    autoRoute?: boolean;
+    port?: number;
+    costOptimization?: boolean;
+  };
 }
 
 /**
@@ -473,6 +484,105 @@ export interface ImportServerResult {
   success: boolean;
   error?: string;
 }
+
+/**
+ * Claude Code Router Configuration
+ */
+export interface RouterConfig {
+  enabled: boolean;
+  port: number;
+  defaultModel: string;
+  backgroundModel: string;
+  thinkModel: string;
+  longContextModel: string;
+  autoRoute: boolean;
+  costOptimization: boolean;
+  openrouterApiKey?: string;
+}
+
+/**
+ * Router Status Information
+ */
+export interface RouterStatus {
+  running: boolean;
+  port?: number;
+  lastHealthCheck?: number;
+  version?: string;
+  error?: string;
+}
+
+/**
+ * Model routing decision
+ */
+export interface RoutingDecision {
+  selectedModel: string;
+  reason: string;
+  estimatedCost: number;
+  fallbackUsed: boolean;
+}
+
+/**
+ * Orchestration Types
+ */
+export interface OrchestrationTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  icon: string;
+  complexity: string;
+  estimated_time: string;
+  agents: string[]; // Agent IDs
+  routing_strategy: string;
+  estimated_savings: number;
+  use_cases: string[];
+  steps: OrchestrationStep[];
+}
+
+export interface OrchestrationStep {
+  id: string;
+  name: string;
+  description: string;
+  agent_id: string;
+  task_template: string;
+  depends_on: string[]; // Step IDs this step depends on
+  timeout_minutes: number;
+  retry_count: number;
+}
+
+export interface OrchestrationExecution {
+  id: string;
+  template_id: string;
+  project_path: string;
+  initial_task: string;
+  status: OrchestrationStatus;
+  started_at: number;
+  completed_at?: number;
+  current_step?: string;
+  completed_steps: string[];
+  failed_steps: string[];
+  step_results: Record<string, StepResult>;
+  total_cost: number;
+  total_tokens: number;
+  error_message?: string;
+}
+
+export interface StepResult {
+  step_id: string;
+  agent_id: string;
+  status: StepStatus;
+  started_at: number;
+  completed_at?: number;
+  task: string;
+  output?: string;
+  error?: string;
+  cost: number;
+  tokens: number;
+  model_used?: string;
+}
+
+export type OrchestrationStatus = 'Pending' | 'Running' | 'Completed' | 'Failed' | 'Cancelled';
+export type StepStatus = 'Pending' | 'Running' | 'Completed' | 'Failed' | 'Skipped';
 
 /**
  * API client for interacting with the Rust backend
@@ -1930,6 +2040,218 @@ export const api = {
       return await invoke<ClaudeInstallation[]>("list_claude_installations");
     } catch (error) {
       console.error("Failed to list Claude installations:", error);
+      throw error;
+    }
+  },
+
+  // Claude Code Router API methods
+
+  /**
+   * Gets the current router configuration
+   * @returns Promise resolving to router configuration
+   */
+  async getRouterConfig(): Promise<RouterConfig> {
+    try {
+      return await invoke<RouterConfig>("get_router_config");
+    } catch (error) {
+      console.error("Failed to get router config:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Updates the router configuration
+   * @param config - The new router configuration
+   * @returns Promise resolving when configuration is saved
+   */
+  async setRouterConfig(config: RouterConfig): Promise<void> {
+    try {
+      return await invoke<void>("set_router_config", { config });
+    } catch (error) {
+      console.error("Failed to set router config:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Starts the claude-code-router service
+   * @returns Promise resolving to router status
+   */
+  async startRouter(): Promise<RouterStatus> {
+    try {
+      return await invoke<RouterStatus>("start_router");
+    } catch (error) {
+      console.error("Failed to start router:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Stops the claude-code-router service
+   * @returns Promise resolving when router is stopped
+   */
+  async stopRouter(): Promise<void> {
+    try {
+      return await invoke<void>("stop_router");
+    } catch (error) {
+      console.error("Failed to stop router:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Gets the current status of the router service
+   * @returns Promise resolving to router status
+   */
+  async getRouterStatus(): Promise<RouterStatus> {
+    try {
+      return await invoke<RouterStatus>("get_router_status");
+    } catch (error) {
+      console.error("Failed to get router status:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Tests router connectivity and health
+   * @returns Promise resolving to health check result
+   */
+  async testRouterHealth(): Promise<string> {
+    try {
+      return await invoke<string>("test_router_health");
+    } catch (error) {
+      console.error("Failed to test router health:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Gets routing decision for a given prompt
+   * @param prompt - The user prompt to analyze
+   * @param context - Optional context for routing decision
+   * @returns Promise resolving to routing decision
+   */
+  async getRoutingDecision(prompt: string, context?: string): Promise<RoutingDecision> {
+    try {
+      return await invoke<RoutingDecision>("get_routing_decision", { prompt, context });
+    } catch (error) {
+      console.error("Failed to get routing decision:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Executes a Claude request through the router (with fallback)
+   * @param prompt - The user prompt
+   * @param model - Optional model override
+   * @param projectPath - Optional project path for context
+   * @returns Promise resolving to response
+   */
+  async executeWithRouter(prompt: string, model?: string, projectPath?: string): Promise<string> {
+    try {
+      return await invoke<string>("execute_with_router", { prompt, model, projectPath });
+    } catch (error) {
+      console.error("Failed to execute with router:", error);
+      throw error;
+    }
+  },
+
+  // Orchestration API methods
+
+  /**
+   * Gets all available orchestration templates
+   * @returns Promise resolving to array of orchestration templates
+   */
+  async getOrchestrationTemplates(): Promise<OrchestrationTemplate[]> {
+    try {
+      return await invoke<OrchestrationTemplate[]>("get_orchestration_templates");
+    } catch (error) {
+      console.error("Failed to get orchestration templates:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Gets a specific orchestration template by ID
+   * @param templateId - The template ID to retrieve
+   * @returns Promise resolving to the orchestration template
+   */
+  async getOrchestrationTemplate(templateId: string): Promise<OrchestrationTemplate> {
+    try {
+      return await invoke<OrchestrationTemplate>("get_orchestration_template", { templateId });
+    } catch (error) {
+      console.error("Failed to get orchestration template:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Creates a new orchestration template
+   * @param template - The template to create
+   * @returns Promise resolving to the template ID
+   */
+  async createOrchestrationTemplate(template: OrchestrationTemplate): Promise<string> {
+    try {
+      return await invoke<string>("create_orchestration_template", { template });
+    } catch (error) {
+      console.error("Failed to create orchestration template:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Starts execution of an orchestration template
+   * @param templateId - The template ID to execute
+   * @param projectPath - The project path to execute in
+   * @param initialTask - The initial task description
+   * @returns Promise resolving to the execution ID
+   */
+  async startOrchestration(templateId: string, projectPath: string, initialTask: string): Promise<string> {
+    try {
+      return await invoke<string>("start_orchestration", { templateId, projectPath, initialTask });
+    } catch (error) {
+      console.error("Failed to start orchestration:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Gets details of a specific orchestration execution
+   * @param executionId - The execution ID to retrieve
+   * @returns Promise resolving to the orchestration execution
+   */
+  async getOrchestrationExecution(executionId: string): Promise<OrchestrationExecution> {
+    try {
+      return await invoke<OrchestrationExecution>("get_orchestration_execution", { executionId });
+    } catch (error) {
+      console.error("Failed to get orchestration execution:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Gets all orchestration executions
+   * @returns Promise resolving to array of orchestration executions
+   */
+  async getOrchestrationExecutions(): Promise<OrchestrationExecution[]> {
+    try {
+      return await invoke<OrchestrationExecution[]>("get_orchestration_executions");
+    } catch (error) {
+      console.error("Failed to get orchestration executions:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Cancels a running orchestration execution
+   * @param executionId - The execution ID to cancel
+   * @returns Promise resolving when cancellation is successful
+   */
+  async cancelOrchestration(executionId: string): Promise<void> {
+    try {
+      return await invoke<void>("cancel_orchestration", { executionId });
+    } catch (error) {
+      console.error("Failed to cancel orchestration:", error);
       throw error;
     }
   },

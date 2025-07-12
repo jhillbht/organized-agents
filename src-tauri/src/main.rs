@@ -6,6 +6,7 @@ mod claude_binary;
 mod commands;
 mod process;
 mod sandbox;
+mod education;
 
 use checkpoint::state::CheckpointState;
 use commands::agents::{
@@ -17,6 +18,9 @@ use commands::agents::{
             import_preinstalled_agents, init_database, kill_agent_session,
     list_agent_runs, list_agent_runs_with_metrics, list_agents, list_claude_installations,
     list_running_sessions, set_claude_binary_path, stream_session_output, update_agent, AgentDb,
+};
+use commands::auth::{
+    check_auth_status, claude_login, claude_logout, get_auth_mode,
 };
 use commands::claude::{
     cancel_claude_execution, check_auto_checkpoint, check_claude_version, cleanup_old_checkpoints,
@@ -34,6 +38,15 @@ use commands::mcp::{
     mcp_read_project_config, mcp_remove, mcp_reset_project_choices, mcp_save_project_config,
     mcp_serve, mcp_test_connection,
 };
+use commands::orchestration::{
+    cancel_orchestration, create_orchestration_template, get_orchestration_execution,
+    get_orchestration_executions, get_orchestration_template, get_orchestration_templates,
+    initialize_orchestration_templates, start_orchestration,
+};
+use commands::router::{
+    execute_with_router, get_router_config, get_router_status, get_routing_decision,
+    set_router_config, start_router, stop_router, test_router_health, RouterManager,
+};
 use commands::sandbox::{
     clear_sandbox_violations, create_sandbox_profile, create_sandbox_rule, delete_sandbox_profile,
     delete_sandbox_rule, export_all_sandbox_profiles, export_sandbox_profile,
@@ -45,8 +58,13 @@ use commands::screenshot::{capture_url_screenshot, cleanup_screenshot_temp_files
 use commands::usage::{
     get_session_stats, get_usage_by_date_range, get_usage_details, get_usage_stats,
 };
+use education::EducationDB;
+use education::commands::{
+    get_education_sessions, start_education_session, complete_education_session,
+    reset_education_progress, initialize_education_system,
+};
 use process::ProcessRegistryState;
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 use tauri::Manager;
 
 fn main() {
@@ -95,6 +113,39 @@ fn main() {
 
             // Initialize Claude process state
             app.manage(ClaudeProcessState::default());
+
+            // Initialize router manager
+            let router_manager = Arc::new(RouterManager::new());
+            app.manage(router_manager.clone());
+
+            // Auto-start router if enabled
+            let router_clone = router_manager.clone();
+            tauri::async_runtime::spawn(async move {
+                if let Err(e) = router_clone.auto_start_if_enabled().await {
+                    log::error!("Failed to auto-start router: {}", e);
+                }
+            });
+
+            // Initialize orchestration templates
+            initialize_orchestration_templates();
+
+            // Initialize education database
+            let app_data_dir = app.path().app_data_dir()
+                .expect("Failed to get app data directory");
+            
+            // Ensure the app data directory exists
+            std::fs::create_dir_all(&app_data_dir)
+                .expect("Failed to create app data directory");
+                
+            let education_db_path = app_data_dir.join("education.db");
+            let education_db = EducationDB::new(education_db_path)
+                .expect("Failed to initialize education database");
+            
+            // Initialize sessions on startup
+            education_db.initialize_sessions()
+                .expect("Failed to initialize education sessions");
+                
+            app.manage(Mutex::new(education_db));
 
             Ok(())
         })
@@ -195,7 +246,31 @@ fn main() {
             mcp_read_project_config,
             mcp_save_project_config,
             capture_url_screenshot,
-            cleanup_screenshot_temp_files
+            cleanup_screenshot_temp_files,
+            get_router_config,
+            set_router_config,
+            start_router,
+            stop_router,
+            get_router_status,
+            test_router_health,
+            get_routing_decision,
+            execute_with_router,
+            get_orchestration_templates,
+            get_orchestration_template,
+            create_orchestration_template,
+            start_orchestration,
+            get_orchestration_execution,
+            get_orchestration_executions,
+            cancel_orchestration,
+            get_education_sessions,
+            start_education_session,
+            complete_education_session,
+            reset_education_progress,
+            initialize_education_system,
+            check_auth_status,
+            claude_login,
+            claude_logout,
+            get_auth_mode
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

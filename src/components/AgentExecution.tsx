@@ -11,19 +11,26 @@ import {
   Copy,
   ChevronDown,
   Maximize2,
-  X
+  X,
+  Zap,
+  DollarSign,
+  FileText,
+  CheckCircle,
+  XCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Popover } from "@/components/ui/popover";
-import { api, type Agent } from "@/lib/api";
+import { api, type Agent, type RoutingDecision } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { open } from "@tauri-apps/plugin-dialog";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { StreamMessage } from "./StreamMessage";
 import { ExecutionControlBar } from "./ExecutionControlBar";
 import { ErrorBoundary } from "./ErrorBoundary";
+import { PlanModeDisplay } from "./PlanModeDisplay";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 interface AgentExecutionProps {
@@ -42,7 +49,7 @@ interface AgentExecutionProps {
 }
 
 export interface ClaudeStreamMessage {
-  type: "system" | "assistant" | "user" | "result";
+  type: "system" | "assistant" | "user" | "result" | "plan";
   subtype?: string;
   message?: {
     content?: any[];
@@ -55,6 +62,13 @@ export interface ClaudeStreamMessage {
     input_tokens: number;
     output_tokens: number;
   };
+  // Plan mode specific fields
+  plan?: string;
+  planStatus?: 'pending' | 'approved' | 'rejected';
+  estimatedCost?: string;
+  estimatedTime?: string;
+  complexity?: 'low' | 'medium' | 'high';
+  safetyLevel?: 'safe' | 'caution' | 'warning';
   [key: string]: any;
 }
 
@@ -73,6 +87,11 @@ export const AgentExecution: React.FC<AgentExecutionProps> = ({
   const [task, setTask] = useState(agent.default_task || "");
   const [model, setModel] = useState(agent.model || "sonnet");
   const [isRunning, setIsRunning] = useState(false);
+  const [routingDecision, setRoutingDecision] = useState<RoutingDecision | null>(null);
+  const [useRouterOptimization, setUseRouterOptimization] = useState(true);
+  const [isPlanModeEnabled, setIsPlanModeEnabled] = useState(false);
+  const [pendingPlan, setPendingPlan] = useState<string | null>(null);
+  const [planApprovalStatus, setPlanApprovalStatus] = useState<'pending' | 'approved' | 'rejected' | null>(null);
   const [messages, setMessages] = useState<ClaudeStreamMessage[]>([]);
   const [rawJsonlOutput, setRawJsonlOutput] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -243,6 +262,27 @@ export const AgentExecution: React.FC<AgentExecutionProps> = ({
     }, 0);
     setTotalTokens(tokens);
   }, [messages]);
+
+  // Get routing decision when task changes and router optimization is enabled
+  useEffect(() => {
+    const getRoutingDecision = async () => {
+      if (useRouterOptimization && task.trim() && !isRunning) {
+        try {
+          const decision = await api.getRoutingDecision(task, projectPath || undefined);
+          setRoutingDecision(decision);
+        } catch (error) {
+          console.error("Failed to get routing decision:", error);
+          setRoutingDecision(null);
+        }
+      } else {
+        setRoutingDecision(null);
+      }
+    };
+
+    // Debounce the routing decision request
+    const timeoutId = setTimeout(getRoutingDecision, 500);
+    return () => clearTimeout(timeoutId);
+  }, [task, projectPath, useRouterOptimization, isRunning]);
 
 
   const handleSelectPath = async () => {
@@ -444,7 +484,9 @@ export const AgentExecution: React.FC<AgentExecutionProps> = ({
   };
 
   const renderIcon = () => {
-    const Icon = agent.icon in AGENT_ICONS ? AGENT_ICONS[agent.icon as keyof typeof AGENT_ICONS] : Terminal;
+    // Use the ICON_MAP from IconPicker instead of circular import
+    const { ICON_MAP } = require("./IconPicker");
+    const Icon = ICON_MAP[agent.icon] || Terminal;
     return <Icon className="h-5 w-5" />;
   };
 
@@ -638,6 +680,121 @@ export const AgentExecution: React.FC<AgentExecutionProps> = ({
                 </button>
               </div>
             </div>
+
+            {/* Router Optimization & Plan Mode */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label>Execution Options</Label>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => !isRunning && setIsPlanModeEnabled(!isPlanModeEnabled)}
+                    className={cn(
+                      "flex items-center gap-2 px-3 py-1 rounded-full text-xs transition-all",
+                      isPlanModeEnabled
+                        ? "bg-blue-50 text-blue-700 border border-blue-200"
+                        : "bg-muted text-muted-foreground border border-muted"
+                    )}
+                    disabled={isRunning}
+                  >
+                    <FileText className="h-3 w-3" />
+                    {isPlanModeEnabled ? "Plan Mode" : "Direct Mode"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => !isRunning && setUseRouterOptimization(!useRouterOptimization)}
+                    className={cn(
+                      "flex items-center gap-2 px-3 py-1 rounded-full text-xs transition-all",
+                      useRouterOptimization
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : "bg-muted text-muted-foreground border border-muted"
+                    )}
+                    disabled={isRunning}
+                  >
+                    <Zap className="h-3 w-3" />
+                    {useRouterOptimization ? "Router Active" : "Router Disabled"}
+                  </button>
+                </div>
+              </div>
+              
+              {useRouterOptimization && routingDecision && (
+                <div className="p-3 rounded-lg bg-green-50 border border-green-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="text-xs bg-white">
+                        {routingDecision.selectedModel}
+                      </Badge>
+                      <span className="text-xs text-green-700">
+                        {routingDecision.reason}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 text-green-600">
+                      <DollarSign className="h-3 w-3" />
+                      <span className="text-xs font-medium">
+                        ${routingDecision.estimatedCost}
+                      </span>
+                    </div>
+                  </div>
+                  {!routingDecision.fallbackUsed && (
+                    <div className="text-xs text-green-600">
+                      ✓ Cost-optimized model selected automatically
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Plan Mode Notice */}
+            {isPlanModeEnabled && (
+              <div className="p-3 rounded-lg bg-blue-50 border border-blue-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-800">Plan Mode Enabled</span>
+                </div>
+                <p className="text-xs text-blue-700">
+                  Agent will create a plan for approval before executing. This helps you review complex tasks and ensure safety.
+                </p>
+              </div>
+            )}
+
+            {/* Plan Approval Interface */}
+            {pendingPlan && planApprovalStatus === 'pending' && (
+              <div className="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <FileText className="h-4 w-4 text-yellow-600" />
+                  <span className="text-sm font-medium text-yellow-800">Plan Awaiting Approval</span>
+                </div>
+                <div className="bg-white p-3 rounded border text-sm whitespace-pre-wrap mb-3">
+                  {pendingPlan}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      setPlanApprovalStatus('approved');
+                      // Continue with execution
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                    Approve Plan
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setPlanApprovalStatus('rejected');
+                      setPendingPlan(null);
+                      setIsRunning(false);
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <XCircle className="h-4 w-4" />
+                    Reject Plan
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Task Input */}
             <div className="space-y-2">
@@ -892,6 +1049,3 @@ export const AgentExecution: React.FC<AgentExecutionProps> = ({
     </div>
   );
 };
-
-// Import AGENT_ICONS for icon rendering
-import { AGENT_ICONS } from "./CCAgents";

@@ -1,10 +1,90 @@
 # Organized AI 🤝🤖
 
-**The world's first comprehensive parallel agentic development education system**
+**The world's first comprehensive parallel agentic development system**
+
+> ⚠️ **ALPHA SOFTWARE**: This is alpha software under active development. Expect bugs and breaking changes.
 
 Organized AI is a powerful desktop application that transforms how you coordinate AI agents for accelerated development. Built with Tauri 2 and featuring a beautiful React frontend, it provides your command center for managing multiple AI agents, creating sophisticated workflows, and mastering parallel development coordination.
 
 ![Organized AI Logo](src-tauri/icons/icon.png)
+
+## 🚀 Quickstart
+
+> ⚠️ **IMPORTANT**: This is alpha software. For the most reliable experience, use the manual installation steps below.
+
+### Prerequisites
+- **Node.js** 18+ or **Bun** (recommended)
+- **Rust** 1.70+ (install from [rustup.rs](https://rustup.rs))
+- **Git**
+
+### Installation Steps
+
+```bash
+# 1. Clone repository
+git clone https://github.com/Organized-AI/organized-agents.git
+cd organized-agents
+
+# 2. Set up environment variables
+cp .env.example .env
+# Edit .env and add your API keys (see Environment Setup below)
+
+# 3. Install dependencies
+bun install  # or npm install
+
+# 4. Build and run
+bun run tauri dev  # Development mode
+```
+
+### Environment Setup
+
+Organized AI supports two authentication methods:
+
+#### Option 1: Claude Max Plan (Recommended - No API Key Needed!)
+
+If you have a Claude Max subscription, you can use it directly:
+
+```bash
+# Edit .env and set:
+AUTH_MODE=claude-max
+```
+
+**Requirements:**
+- Claude Code CLI installed from [claude.ai/download](https://claude.ai/download)
+- Active Claude Max subscription
+- One-time login via browser when prompted
+
+#### Option 2: API Key Authentication
+
+For API-based access:
+
+```bash
+# Edit .env and set:
+AUTH_MODE=api-key
+
+# Then add your API keys:
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# Optional for additional features:
+OPENAI_API_KEY=your_openai_key_here
+GOOGLE_API_KEY=your_google_key_here
+```
+
+**Getting API Keys:**
+- Anthropic: [console.anthropic.com/account/keys](https://console.anthropic.com/account/keys)
+- OpenAI: [platform.openai.com/api-keys](https://platform.openai.com/api-keys)  
+- Google: [makersuite.google.com/app/apikey](https://makersuite.google.com/app/apikey)
+
+### Troubleshooting
+
+**Build Issues:**
+- If build hangs, try: `rm -rf node_modules && bun install`
+- For Rust compilation errors: `cargo clean` in `src-tauri/`
+- Check system requirements: Node.js 18+, Rust 1.70+
+
+**Runtime Issues:**
+- Missing API keys: Check your `.env` file
+- Permission errors: Ensure proper file permissions
+- Port conflicts: Default port is 1420 (configurable in vite.config.ts)
 
 ## 🌟 What Makes Organized AI Special
 
@@ -28,77 +108,56 @@ Organized AI comes pre-loaded with **12 sophisticated development agents** desig
 - **Security Scanner** - Security analysis and vulnerability detection  
 - **Unit Tests Bot** - Automated test generation
 
-## 🚀 Features
+## 🎓 Progressive Learning System
 
-- **Pre-installed Agent Library**: 12 enterprise-grade agents ready to use
-- **Session Management**: Visual timelines and checkpoints for agent coordination
-- **Secure Sandboxing**: Safe execution of agent workflows
-- **Cross-Platform**: Native apps for macOS, Windows, and Linux
-- **Beautiful UI**: Modern React interface with Tailwind CSS
-- **Agent Orchestration**: Coordinate multiple agents simultaneously
-- **Progress Tracking**: Monitor agent performance and outcomes
+Organized AI features a progressive learning system where each session unlocks after completing the previous one:
 
-## 📦 Installation
+### Foundation Path
+1. **Single Agent Basics** - Master working with one agent
+2. **Agent Configuration** - Customize agent behavior
+3. **Basic Workflows** - Create your first automated workflows
+4. **Environment Setup** - Optimize your development environment
 
-### Prerequisites
+### Coordination Path
+5. **Pair Programming** - Coordinate two agents effectively
+6. **Handoff Patterns** - Master agent-to-agent handoffs
+7. **Parallel Tasks** - Run multiple agents simultaneously
+8. **Error Recovery** - Handle failures gracefully
 
-- **Rust** (latest stable version)
-- **Bun** (for package management)
-- **Git** 
+### Advanced Path
+9. **Multi-Agent Projects** - Orchestrate 3+ agents
+10. **Complex Workflows** - Build sophisticated pipelines
+11. **Performance Optimization** - Scale your workflows
+12. **Production Patterns** - Deploy agent systems
 
-### Quick Start
+### Mastery Path
+13. **Custom Agent Creation** - Build your own agents
+14. **Advanced Orchestration** - Enterprise-grade coordination
+15. **System Integration** - Connect with external tools
+16. **Community Contribution** - Share your expertise
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
 
 ```bash
-# Clone the repository
-git clone https://github.com/Organized-AI/organized-agents.git
-cd organized-agents
+# Authentication Mode
+AUTH_MODE=claude-max  # or 'api-key'
 
-# Install dependencies
-bun install
+# API Keys (only needed if AUTH_MODE=api-key)
+ANTHROPIC_API_KEY=your_api_key_here
+OPENAI_API_KEY=your_openai_key
+GOOGLE_API_KEY=your_google_key
 
-# Start development server
-bun run tauri dev
-
-# Build for production
-bun run tauri build
+# Paths
+ORGANIZED_AI_DATA_DIR=~/.organized-ai
 ```
 
-## 🎓 Learning Path
+### Agent Configuration
 
-**📚 Complete Course Materials**: [https://github.com/Organized-AI/organized-agents](https://github.com/Organized-AI/organized-agents)
-
-*The full 23-week curriculum, exercises, and training materials are available in our dedicated course repository.*
-
-Organized AI is designed for the **23-week progression from beginner to parallel agent master**:
-
-### Foundation (Weeks 1-11)
-- Single agent mastery
-- Basic coordination patterns
-- Development environment setup
-
-### Pair Coordination (Weeks 12-15)  
-- Two-agent workflows
-- Claude Code + Gemini CLI coordination
-- Simple parallel tasks
-
-### Team Coordination (Weeks 16-19)
-- Multi-agent orchestration
-- Complex project coordination
-- Advanced workflow patterns
-
-### Full Orchestra (Weeks 20-22)
-- Enterprise-grade coordination
-- 5+ agent simultaneous workflows
-- Production deployment patterns
-
-### Certification (Week 23)
-- Master-level project completion
-- Portfolio development
-- Community contribution
-
-## 🛠️ Agent Development
-
-Create custom agents by adding `.claudia.json` files to the `cc_agents/` directory:
+Agents are configured via JSON files in the `cc_agents/` directory:
 
 ```json
 {
@@ -106,66 +165,74 @@ Create custom agents by adding `.claudia.json` files to the `cc_agents/` directo
   "description": "Description of what this agent does",
   "system_prompt": "Your agent's system prompt here",
   "model": "claude-sonnet",
-  "tools": ["filesystem", "terminal", "browser"]
+  "tools": ["filesystem", "terminal", "browser"],
+  "tags": ["development", "automation"]
 }
 ```
 
-## 🔧 Configuration
+## 🛠️ Troubleshooting
 
-Organized AI automatically detects your development environment and configures agents accordingly. Key features:
+### Common Issues
 
-- **Auto-detection** of Claude Code, Gemini CLI, and other tools
-- **Environment variable** management for API keys
-- **Project-specific** agent configurations
-- **Secure storage** of credentials and session data
+**Build fails with Rust errors**
+```bash
+# Update Rust
+rustup update stable
+rustup default stable
+```
+
+**Bun command not found**
+```bash
+# Install Bun
+curl -fsSL https://bun.sh/install | bash
+```
+
+**Claude Code integration not working**
+- Ensure Claude Code CLI is installed and in your PATH
+- Check that `~/.claude/` directory exists
+- Verify API keys are correctly set
+
+**Application won't start**
+1. Check logs in: `~/.organized-ai/logs/`
+2. Verify all dependencies are installed
+3. Try clearing cache: `rm -rf node_modules && bun install`
+
+### Getting Help
+
+- **Issues**: [GitHub Issues](https://github.com/Organized-AI/organized-agents/issues)
+- **Community**: [Discord](https://discord.gg/organized-ai)
+- **Documentation**: [Wiki](https://github.com/Organized-AI/organized-agents/wiki)
+
+## 🚨 Known Issues (Alpha)
+
+- **Plan Mode**: Currently in development, not fully functional
+- **Windows**: Some path handling issues on Windows
+- **Performance**: Large agent workflows may experience lag
+- **Auto-updater**: Not yet implemented
+- **Signing**: App is not code-signed (macOS will show security warning)
 
 ## 🤝 Contributing
 
-We welcome contributions! Whether you're:
-- Creating new agents
-- Improving the UI/UX  
-- Adding new coordination patterns
-- Enhancing documentation
-- Reporting bugs
+We welcome contributions! Areas where we need help:
 
-Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+- 🐛 Bug fixes and issue resolution
+- 📖 Documentation improvements
+- 🎨 UI/UX enhancements
+- 🤖 New agent templates
+- 🧪 Test coverage
+- 🌐 Internationalization
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-This project is licensed under the AGPL License - see the [LICENSE](LICENSE) file for details.
+AGPL-3.0 License - see [LICENSE](LICENSE) for details.
 
-## 🌐 Community
+## 🌐 Links
 
-- **GitHub**: [Organized-AI/organized-agents](https://github.com/Organized-AI/organized-agents)
 - **Website**: [organizedai.vip](https://organizedai.vip)
+- **GitHub**: [Organized-AI/organized-agents](https://github.com/Organized-AI/organized-agents)
 - **Events**: [lu.ma/Organizedai](https://lu.ma/Organizedai)
-
-## 🎯 Plan Mode Competitive Advantage
-
-**🚨 Immediate Opportunity**: Claudia (market leader) is missing Claude Code's plan mode functionality. This represents a critical competitive advantage opportunity for Organized AI.
-
-📋 **Plan Mode Features**:
-- **Safety First**: Review AI plans before execution
-- **Multi-Agent Coordination**: Plan approval workflows for agent teams
-- **Risk Assessment**: Automatic detection of potentially destructive operations
-- **Enhanced UX**: Visual plan editing and approval interface
-
-📖 **Implementation Documents**:
-- [`PLAN_MODE_OPPORTUNITY.md`](PLAN_MODE_OPPORTUNITY.md) - Market analysis and competitive advantage
-- [`PLAN_MODE_IMPLEMENTATION.md`](PLAN_MODE_IMPLEMENTATION.md) - Technical implementation plan
-- [`PLAN_MODE_ROADMAP.md`](PLAN_MODE_ROADMAP.md) - 12-week development timeline
-- [`PLAN_MODE_QUICKSTART.md`](PLAN_MODE_QUICKSTART.md) - Immediate implementation guide
-
-**⏰ Timeline**: 2-4 month window before competitors likely implement this feature.
-
-## 🎯 Roadmap
-
-- [ ] Advanced agent marketplace
-- [ ] Cloud synchronization
-- [ ] Team collaboration features
-- [ ] Enterprise security enhancements
-- [ ] Mobile companion app
-- [ ] Integration with popular IDEs
 
 ---
 

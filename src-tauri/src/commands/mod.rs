@@ -1,6 +1,9 @@
 pub mod agents;
+pub mod auth;
 pub mod claude;
 pub mod mcp;
+pub mod orchestration;
+pub mod router;
 pub mod sandbox;
 pub mod screenshot;
 pub mod usage;

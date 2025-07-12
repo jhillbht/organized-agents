@@ -9,7 +9,8 @@ import {
   ChevronDown,
   GitBranch,
   Settings,
-  Globe
+  Globe,
+  Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +32,7 @@ import { SplitPane } from "@/components/ui/split-pane";
 import { WebviewPreview } from "./WebviewPreview";
 import type { ClaudeStreamMessage } from "./AgentExecution";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { AgentRouterCoordination } from "./AgentRouterCoordination";
 
 interface ClaudeCodeSessionProps {
   /**
@@ -87,6 +89,10 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
   const [showPreviewPrompt, setShowPreviewPrompt] = useState(false);
   const [splitPosition, setSplitPosition] = useState(50);
   const [isPreviewMaximized, setIsPreviewMaximized] = useState(false);
+  
+  // New state for coordination feature
+  const [showCoordination, setShowCoordination] = useState(false);
+  const [coordinationAgents, setCoordinationAgents] = useState<any[]>([]);
   
   const parentRef = useRef<HTMLDivElement>(null);
   const unlistenRefs = useRef<UnlistenFn[]>([]);
@@ -591,6 +597,18 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
     }
   };
 
+  const handleOpenCoordination = async () => {
+    try {
+      // Load available agents for coordination
+      const agents = await api.getAgents();
+      setCoordinationAgents(agents);
+      setShowCoordination(true);
+    } catch (error) {
+      console.error("Failed to load agents for coordination:", error);
+      setShowCoordination(true); // Still open dialog, might have cached agents
+    }
+  };
+
   // Clean up listeners on component unmount
   useEffect(() => {
     return () => {
@@ -812,6 +830,28 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
               </Tooltip>
             </TooltipProvider>
             
+            {/* Coordinate Agents Button */}
+            {effectiveSession && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleOpenCoordination}
+                      className="flex items-center gap-2"
+                    >
+                      <Users className="h-4 w-4" />
+                      Coordinate Agents
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Launch multi-agent coordination workflows for this project
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+            
             {messages.length > 0 && (
               <Popover
                 trigger={
@@ -982,6 +1022,37 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
               projectPath={projectPath}
               onClose={() => setShowSettings(false)}
             />
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Coordinate Agents Dialog */}
+      {showCoordination && (
+        <Dialog open={showCoordination} onOpenChange={setShowCoordination}>
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-purple-600" />
+                Coordinate Agents for This Project
+              </DialogTitle>
+              <DialogDescription>
+                Launch multi-agent workflows optimized for your current project: {projectPath}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="mt-4">
+              <AgentRouterCoordination
+                agents={coordinationAgents}
+                onExecuteCoordination={(task) => {
+                  console.log("Executing coordination task for project:", projectPath, task);
+                  // Close dialog and show success message
+                  setShowCoordination(false);
+                  // Could integrate with session's message system
+                  // or show a toast notification about coordination started
+                }}
+                className="border-0 shadow-none p-0"
+              />
+            </div>
           </DialogContent>
         </Dialog>
       )}

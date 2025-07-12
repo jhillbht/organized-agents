@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Circle, FileText, Settings, ExternalLink, BarChart3, Network, Info } from "lucide-react";
+import { Circle, FileText, Settings, ExternalLink, BarChart3, Network, Info, Users, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover } from "@/components/ui/popover";
 import { api, type ClaudeVersionStatus } from "@/lib/api";
@@ -28,6 +28,14 @@ interface TopbarProps {
    */
   onInfoClick: () => void;
   /**
+   * Callback when Coordinate Agents is clicked
+   */
+  onCoordinationClick: () => void;
+  /**
+   * Callback when Education is clicked
+   */
+  onEducationClick: () => void;
+  /**
    * Optional className for styling
    */
   className?: string;
@@ -50,6 +58,8 @@ export const Topbar: React.FC<TopbarProps> = ({
   onUsageClick,
   onMCPClick,
   onInfoClick,
+  onCoordinationClick,
+  onEducationClick,
   className,
 }) => {
   const [versionStatus, setVersionStatus] = useState<ClaudeVersionStatus | null>(null);
@@ -186,6 +196,16 @@ export const Topbar: React.FC<TopbarProps> = ({
         <Button
           variant="ghost"
           size="sm"
+          onClick={onEducationClick}
+          className="text-xs"
+        >
+          <GraduationCap className="mr-2 h-3 w-3" />
+          Education
+        </Button>
+        
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={onClaudeClick}
           className="text-xs"
         >
@@ -201,6 +221,16 @@ export const Topbar: React.FC<TopbarProps> = ({
         >
           <Network className="mr-2 h-3 w-3" />
           MCP
+        </Button>
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onCoordinationClick}
+          className="text-xs"
+        >
+          <Users className="mr-2 h-3 w-3" />
+          Coordinate Agents
         </Button>
         
         <Button
