@@ -42,6 +42,7 @@ export interface ClaudeSettings {
   // Router-specific settings
   routerEnabled?: boolean;
   routerConfig?: {
+    openrouterApiKey?: string;
     default?: string;
     background?: string;
     think?: string;

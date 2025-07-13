@@ -1,30 +1,83 @@
 {
   "name": "Organized Agents Development",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": "."
   },
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-  "forwardPorts": [1420, 3000, 8080],
-  "postCreateCommand": "bun install && cargo build",
+  "forwardPorts": [1420, 1421, 3000, 8080],
+  "portsAttributes": {
+    "1420": {
+      "label": "Vite Dev Server",
+      "onAutoForward": "notify"
+    },
+    "1421": {
+      "label": "Vite HMR",
+      "onAutoForward": "silent"
+    },
+    "3000": {
+      "label": "Alternative Dev Port",
+      "onAutoForward": "ignore"
+    },
+    "8080": {
+      "label": "API Server",
+      "onAutoForward": "ignore"
+    }
+  },
+  "postCreateCommand": "echo '🚀 Container ready! Run: npm install && npm run tauri:dev'",
+  "postStartCommand": "echo '✅ Development environment loaded'",
   "customizations": {
     "vscode": {
       "extensions": [
         "rust-lang.rust-analyzer",
+        "tauri-apps.tauri-vscode",
         "bradlc.vscode-tailwindcss",
         "esbenp.prettier-vscode",
         "ms-vscode.vscode-typescript-next",
-        "tauri-apps.tauri-vscode"
+        "ms-vscode.vscode-json",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "ms-vscode.vscode-toml"
       ],
       "settings": {
         "rust-analyzer.checkOnSave.command": "clippy",
-        "editor.formatOnSave": true
+        "rust-analyzer.cargo.features": "all",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        },
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "tailwindCSS.includeLanguages": {
+          "rust": "html"
+        },
+        "files.associations": {
+          "*.rs": "rust",
+          "*.toml": "toml"
+        },
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        }
       }
     }
   },
   "mounts": [
-    "source=${localWorkspaceFolder}/.env,target=/workspace/.env,type=bind,consistency=cached"
-  ]
+    "source=${localWorkspaceFolder}/.env,target=/workspace/.env,type=bind,consistency=cached",
+    "source=organized-agents-claude-config,target=/root/.claude,type=volume",
+    "source=organized-agents-cargo-cache,target=/root/.cargo,type=volume",
+    "source=organized-agents-bun-cache,target=/root/.bun,type=volume"
+  ],
+  "containerEnv": {
+    "AUTH_MODE": "claude-max",
+    "RUST_LOG": "debug",
+    "TAURI_DEV_HOST": "0.0.0.0"
+  },
+  "remoteUser": "root",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopContainer"
 }

@@ -6,11 +6,46 @@
 
 Organized AI is a powerful desktop application that transforms how you coordinate AI agents for accelerated development. Built with Tauri 2 and featuring a beautiful React frontend, it provides your command center for managing multiple AI agents, creating sophisticated workflows, and mastering parallel development coordination.
 
-![Organized AI Logo](src-tauri/icons/icon.png)
+<div align="center">
+  <img src="source-icon.png" alt="Organized AI - Human-AI Collaboration" width="200" height="200" style="border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+  <p><em>Bridging human creativity with AI capability</em></p>
+</div>
 
 ## 🚀 Quickstart
 
-> ⚠️ **IMPORTANT**: This is alpha software. For the most reliable experience, use the manual installation steps below.
+> ⚠️ **IMPORTANT**: This is alpha software. For the most reliable experience, use the dev container or manual installation steps below.
+
+### 🐳 Option 1: Dev Container (Zero Setup Required!)
+
+**Recommended for contributors and alpha testers**
+
+```bash
+# 1. Clone repository
+git clone https://github.com/Organized-AI/organized-agents.git
+cd organized-agents
+
+# 2. Validate setup and launch
+./setup-devcontainer.sh
+code .
+
+# 3. Click "Reopen in Container" when prompted
+# 4. Wait for container to build (~5-10 minutes first time)
+# 5. Run in VS Code terminal:
+bun install && bun run tauri:dev
+```
+
+**Benefits:**
+- ✅ **Zero local dependencies** - everything runs in containers
+- ✅ **Consistent environment** across Windows/macOS/Linux
+- ✅ **Claude Max authentication** pre-configured
+- ✅ **VS Code integration** with all extensions
+- ✅ **Alpha testing ready** - identical environment for all testers
+
+**Requirements:** Docker Desktop + VS Code with Dev Containers extension
+
+See [Dev Container Documentation](.devcontainer/README.md) for advanced usage.
+
+### 📦 Option 2: Manual Installation
 
 ### Prerequisites
 - **Node.js** 18+ or **Bun** (recommended)

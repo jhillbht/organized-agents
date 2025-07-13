@@ -20,9 +20,10 @@ import { ClaudeBinaryDialog } from "@/components/ClaudeBinaryDialog";
 import { Toast, ToastContainer } from "@/components/ui/toast";
 import { AgentRouterCoordination } from "@/components/AgentRouterCoordination";
 import { EducationDashboard } from "@/components/EducationDashboard";
+import { Academy } from "@/components/Academy";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
-type View = "welcome" | "projects" | "agents" | "editor" | "settings" | "claude-file-editor" | "claude-code-session" | "usage-dashboard" | "mcp" | "education";
+type View = "welcome" | "projects" | "agents" | "editor" | "settings" | "claude-file-editor" | "claude-code-session" | "usage-dashboard" | "mcp" | "education" | "academy";
 
 /**
  * Main App component - Manages the Claude directory browser UI
@@ -200,13 +201,13 @@ function App() {
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   <Card 
-                    className="h-64 cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg border border-border/50 shimmer-hover bg-gradient-to-br from-primary/5 to-primary/10"
-                    onClick={() => setView("education")}
+                    className="h-64 cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg border border-border/50 shimmer-hover bg-gradient-to-br from-blue-500/5 to-purple-500/10"
+                    onClick={() => setView("academy")}
                   >
                     <div className="h-full flex flex-col items-center justify-center p-8 text-center">
-                      <GraduationCap className="h-16 w-16 mb-4 text-primary" />
+                      <GraduationCap className="h-16 w-16 mb-4 text-blue-600" />
                       <h2 className="text-xl font-semibold mb-2">Agent Journey Academy</h2>
-                      <p className="text-sm text-muted-foreground">Master AI agent coordination through progressive learning</p>
+                      <p className="text-sm text-muted-foreground">Master AI agent development through interactive lessons</p>
                     </div>
                   </Card>
                 </motion.div>
@@ -381,6 +382,13 @@ function App() {
             <div className="h-full p-6">
               <EducationDashboard />
             </div>
+          </div>
+        );
+
+      case "academy":
+        return (
+          <div className="flex-1 overflow-hidden">
+            <Academy onBack={() => setView("welcome")} />
           </div>
         );
       

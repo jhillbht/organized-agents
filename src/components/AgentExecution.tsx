@@ -30,7 +30,6 @@ import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { StreamMessage } from "./StreamMessage";
 import { ExecutionControlBar } from "./ExecutionControlBar";
 import { ErrorBoundary } from "./ErrorBoundary";
-import { PlanModeDisplay } from "./PlanModeDisplay";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 interface AgentExecutionProps {

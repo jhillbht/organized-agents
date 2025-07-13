@@ -7,6 +7,7 @@ mod commands;
 mod process;
 mod sandbox;
 mod education;
+mod academy;
 
 use checkpoint::state::CheckpointState;
 use commands::agents::{
@@ -62,6 +63,12 @@ use education::EducationDB;
 use education::commands::{
     get_education_sessions, start_education_session, complete_education_session,
     reset_education_progress, initialize_education_system,
+};
+use academy::commands::{
+    get_academy_modules, get_academy_lessons, get_lesson_with_progress,
+    start_academy_lesson, complete_academy_lesson, submit_exercise_solution,
+    get_user_academy_stats, get_user_achievements, initialize_academy_system,
+    test_academy_database, initialize_academy_database, get_academy_stats,
 };
 use process::ProcessRegistryState;
 use std::sync::{Arc, Mutex};
@@ -146,6 +153,11 @@ fn main() {
                 .expect("Failed to initialize education sessions");
                 
             app.manage(Mutex::new(education_db));
+
+            // Initialize academy system
+            if let Err(e) = academy::get_connection().and_then(|conn| academy::seed_academy_content(&conn)) {
+                log::error!("Failed to initialize academy system: {}", e);
+            }
 
             Ok(())
         })
@@ -270,7 +282,19 @@ fn main() {
             check_auth_status,
             claude_login,
             claude_logout,
-            get_auth_mode
+            get_auth_mode,
+            get_academy_modules,
+            get_academy_lessons,
+            get_lesson_with_progress,
+            start_academy_lesson,
+            complete_academy_lesson,
+            submit_exercise_solution,
+            get_user_academy_stats,
+            get_user_achievements,
+            initialize_academy_system,
+            test_academy_database,
+            initialize_academy_database,
+            get_academy_stats
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -64,6 +64,10 @@ temp_lib/
 *.swo
 *~
 
+# Dev Containers (track these files)
+!.devcontainer/
+!.devcontainer/**
+
 # OS generated files
 .DS_Store
 .DS_Store?

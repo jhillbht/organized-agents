@@ -34,6 +34,7 @@ interface AgentRouterCoordinationProps {
   agents: Agent[];
   projectPath?: string;
   onExecuteCoordination?: (task: CoordinationTask) => void;
+  onClose?: () => void;
 }
 
 /**
@@ -43,7 +44,8 @@ export const AgentRouterCoordination: React.FC<AgentRouterCoordinationProps> = (
   className,
   agents,
   projectPath,
-  onExecuteCoordination
+  onExecuteCoordination,
+  onClose
 }) => {
   const [coordinationTasks, setCoordinationTasks] = useState<CoordinationTask[]>([]);
   const [orchestrationTemplates, setOrchestrationTemplates] = useState<OrchestrationTemplate[]>([]);

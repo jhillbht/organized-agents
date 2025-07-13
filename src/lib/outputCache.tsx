@@ -3,7 +3,7 @@ import { api } from './api';
 
 // Use the same message interface as AgentExecution for consistency
 export interface ClaudeStreamMessage {
-  type: "system" | "assistant" | "user" | "result";
+  type: "system" | "assistant" | "user" | "result" | "plan";
   subtype?: string;
   message?: {
     content?: any[];
@@ -16,6 +16,13 @@ export interface ClaudeStreamMessage {
     input_tokens: number;
     output_tokens: number;
   };
+  // Plan mode specific fields
+  plan?: string;
+  planStatus?: 'pending' | 'approved' | 'rejected';
+  estimatedCost?: string;
+  estimatedTime?: string;
+  complexity?: 'low' | 'medium' | 'high';
+  safetyLevel?: 'safe' | 'caution' | 'warning';
   [key: string]: any;
 }
 
