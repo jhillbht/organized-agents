@@ -11,6 +11,14 @@ target/
 build/
 out/
 
+# Built Applications
+*.app/
+Organized AI.app/
+*.exe
+*.msi
+*.dmg
+*.pkg
+
 # Logs
 logs/
 *.log
