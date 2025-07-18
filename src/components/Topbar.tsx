@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Circle, FileText, Settings, ExternalLink, BarChart3, Network, Info, Users, GraduationCap } from "lucide-react";
+import { Circle, FileText, Settings, ExternalLink, BarChart3, Network, Info, Users, GraduationCap, Workflow } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover } from "@/components/ui/popover";
 import { api, type ClaudeVersionStatus } from "@/lib/api";
@@ -36,6 +36,10 @@ interface TopbarProps {
    */
   onEducationClick: () => void;
   /**
+   * Callback when BMAD is clicked
+   */
+  onBmadClick?: () => void;
+  /**
    * Optional className for styling
    */
   className?: string;
@@ -60,6 +64,7 @@ export const Topbar: React.FC<TopbarProps> = ({
   onInfoClick,
   onCoordinationClick,
   onEducationClick,
+  onBmadClick,
   className,
 }) => {
   const [versionStatus, setVersionStatus] = useState<ClaudeVersionStatus | null>(null);
@@ -183,6 +188,18 @@ export const Topbar: React.FC<TopbarProps> = ({
       
       {/* Action Buttons */}
       <div className="flex items-center space-x-2">
+        {onBmadClick && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onBmadClick}
+            className="text-xs text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+          >
+            <Workflow className="mr-2 h-3 w-3" />
+            BMAD
+          </Button>
+        )}
+        
         <Button
           variant="ghost"
           size="sm"

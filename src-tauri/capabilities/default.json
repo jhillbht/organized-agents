@@ -23,12 +23,6 @@
     "fs:write-all",
     "fs:scope-app-recursive",
     "fs:scope-home-recursive",
-    "http:default",
-    "http:allow-fetch",
-    "process:default",
-    "notification:default",
-    "clipboard-manager:default",
-    "global-shortcut:default",
-    "updater:default"
+    "shell:default"
   ]
 }
